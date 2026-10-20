@@ -35,6 +35,7 @@ On connect, the server sends one `status` and one `live` message, then streams n
 | `observation` | The AI saw something at the door | Timeline row, small, with thumbnail |
 | `agent_thought` | The agent's reasoning step | **"Thinking" panel** (live, typewriter feel) |
 | `package_unattended` | Package left outside too long | Timeline card, amber |
+| `package_taken` | Someone other than the parent took a package | Timeline card, red if `urgent` |
 | `repeat_visitor` | Unknown person, repeat visits | Timeline card, amber |
 | `routine_missed` | Parent hasn't done their usual thing | Timeline card, red if `urgent` |
 | `night_activity` | Door activity 1–5am | Timeline card, red |

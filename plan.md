@@ -91,44 +91,46 @@ The backend starts from `spikes/`, which already has working code for the hardes
 
 ## 5. Build list
 
-### 1. Repo setup (Ola + Claude, Tue) ✅ in progress
+> **Status Tue Oct 20, night:** backend items 2–6 are built and tested (15 tests; full replayed day runs end to end through the API + WebSocket with the real Strands agent). Still to do: a live run against the Ring stream with a fresh token, a Telegram bot, and the open-source packaging of the replayer.
+
+### 1. Repo setup (Ola + Claude, Tue) ✅
 - [x] `.gitignore` (blocks `.env`, keys, venvs, frames), `.env.example`, MIT `LICENSE`
 - [x] `plan.md`, `FRICTION_LOG.md`, `spikes/`
-- [ ] Folder skeleton: `backend/`, `frontend/`, `shared/` (contract + mock events)
+- [x] Folder skeleton: `backend/`, `frontend/`, `shared/` (contract + mock events)
 
 ### 2. Stream watcher (Ola + Claude)
-- [ ] Open a WHEP session, receive video, sample 1 frame every 2–3 s
-- [ ] **Reconnect automatically** when Ring closes the session (~8 s), with backoff on errors
-- [ ] Always `DELETE` the session on exit
-- [ ] Keep the latest frame in memory for the dashboard's "live" view
-- [ ] Read the token from `.env`, with a clear error when it has expired (401)
+- [x] Open a WHEP session, receive video, sample 1 frame every 2–3 s
+- [x] **Reconnect automatically** when Ring closes the session (~8 s), with backoff on errors
+- [x] Always `DELETE` the session on exit
+- [x] Keep the latest frame in memory for the dashboard's "live" view
+- [x] Read the token from `.env`, with a clear error when it has expired (401)
 
 ### 3. Vision (Ola + Claude)
-- [ ] Send each sampled frame to **Haiku 4.5** on Bedrock and get **structured JSON** back:
+- [x] Send each sampled frame to **Haiku 4.5** on Bedrock and get **structured JSON** back:
   `{ person: bool, person_desc, package: bool, package_desc, vehicle: bool, activity, confidence }`
-- [ ] Skip frames that haven't changed (cheap pixel-diff) to save cost
-- [ ] Use **Sonnet 4.6** only for the escalation/summary step
+- [x] Skip frames that haven't changed (cheap pixel-diff) to save cost
+- [x] Use **Sonnet 4.6** only for the escalation/summary step
 
 ### 4. Brain / agent (Ola + Claude)
-- [ ] Turn observations into **state**: "package on porch since 14:02," "person seen 3× this week"
-- [ ] Rules + agent reasoning for:
+- [x] Turn observations into **state**: "package on porch since 14:02," "person seen 3× this week"
+- [x] Rules + agent reasoning for (plus `package_taken`):
   - `package_unattended`: a package has been present more than N hours (demo: minutes, on a compressed clock)
   - `repeat_visitor`: the same described person on several days
   - `routine_missed`: no "resident leaves/returns" activity by the usual time (uses the seeded history)
   - `night_activity`: door activity between 1–5am
   - `daily_summary`: evening digest
-- [ ] Strands agent with tools: `get_recent_observations`, `get_baseline`, `send_alert`, `write_summary`
-- [ ] Every decision stores a short **reasoning string**, which the dashboard shows live
+- [x] Strands agent with tools: `get_recent_observations`, `get_baseline`, `send_alert`, `write_summary`
+- [x] Every decision stores a short **reasoning string**, which the dashboard shows live
 
 ### 5. Alerts (Ola + Claude)
-- [ ] Telegram bot: text + the frame image + severity
-- [ ] De-duplicate so the same situation isn't alerted twice
+- [x] Telegram bot: text + the frame image + severity (code done; needs a bot token in `.env`)
+- [x] De-duplicate so the same situation isn't alerted twice
 
 ### 6. Scenario replayer + seeded history (Ola + Claude)
-- [ ] Seed **14 days** of believable routine events so "day 15" has a baseline
-- [ ] Replay a scripted demo day on a **compressed clock** (one day in about 60 s)
-- [ ] Synthetic events use the **real Ring webhook payload format**, signed with our HMAC key, and go through the same handler as real webhooks
-- [ ] Everything synthetic is labelled `source: "replay"` and shown that way in the dashboard
+- [x] Seed **14 days** of believable routine events so "day 15" has a baseline
+- [x] Replay a scripted demo day on a **compressed clock** (one day in about 60 s)
+- [x] Synthetic events use the **real Ring webhook payload format**, signed with our HMAC key, and go through the same handler as real webhooks
+- [x] Everything synthetic is labelled `source: "replay"` and shown that way in the dashboard
 - [ ] Stretch: package it as a standalone open-source tool (Open Source mini challenge)
 
 ### 7. Dashboard (Teammate)

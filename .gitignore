@@ -25,3 +25,7 @@ frames/
 .DS_Store
 .idea/
 .vscode/
+
+# Backend runtime data
+backend/data/
+.pytest_cache/

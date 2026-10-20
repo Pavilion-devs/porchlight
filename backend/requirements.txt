@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]
+httpx
+python-dotenv
+aiortc==1.15.0
+pillow
+boto3
+botocore[crt]
+strands-agents
+pydantic
+pytest
+pytest-asyncio

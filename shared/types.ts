@@ -4,6 +4,7 @@ export type EventType =
   | "observation"
   | "agent_thought"
   | "package_unattended"
+  | "package_taken"
   | "repeat_visitor"
   | "routine_missed"
   | "night_activity"
