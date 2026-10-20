@@ -167,7 +167,7 @@ Other endpoints:
 - `GET /api/summary/today`
 - `GET /api/baseline`
 
-Any change to the contract goes in this section **before** it goes in code.
+**Full contract, TypeScript types and mock payloads: [`shared/`](shared/CONTRACT.md).** Any change to the contract goes in `shared/CONTRACT.md` **before** it goes in code.
 
 ---
 

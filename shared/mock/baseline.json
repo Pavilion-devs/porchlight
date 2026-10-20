@@ -1,0 +1,34 @@
+{
+  "parent_name": "Mom",
+  "days_learned": 14,
+  "items": [
+    {
+      "label": "First time outside",
+      "usual": "07:52",
+      "window_minutes": 25,
+      "today": "07:48",
+      "status": "ok"
+    },
+    {
+      "label": "Afternoon walk",
+      "usual": "13:05",
+      "window_minutes": 40,
+      "today": null,
+      "status": "missed"
+    },
+    {
+      "label": "Back home",
+      "usual": "13:50",
+      "window_minutes": 40,
+      "today": null,
+      "status": "pending"
+    },
+    {
+      "label": "Quiet at night (11pm\u20136am)",
+      "usual": "no activity",
+      "window_minutes": 0,
+      "today": "no activity",
+      "status": "ok"
+    }
+  ]
+}

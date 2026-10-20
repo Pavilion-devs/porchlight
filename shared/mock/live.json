@@ -1,0 +1,9 @@
+{
+  "time": "2026-10-20T17:07:00Z",
+  "frame_url": "/api/frames/porch_package.jpg",
+  "description": "A brown cardboard box with a shipping label is sitting on the top step of the front porch. No people in view.",
+  "person": false,
+  "package": true,
+  "vehicle": false,
+  "source": "ring_live"
+}

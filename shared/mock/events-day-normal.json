@@ -1,0 +1,143 @@
+[
+  {
+    "id": "evt_d20_001",
+    "time": "2026-10-20T14:48:00Z",
+    "type": "observation",
+    "severity": "info",
+    "title": "Mom stepped outside",
+    "summary": "Older woman in a blue robe picked up the newspaper and went back in.",
+    "source": "replay",
+    "device_id": "ava1.ring.device.HGUYZ5NB...A6OEZW"
+  },
+  {
+    "id": "evt_d20_002",
+    "time": "2026-10-20T14:48:00Z",
+    "type": "agent_thought",
+    "severity": "info",
+    "title": "Routine check",
+    "summary": "First time outside today at 7:48. Her usual is 7:30\u20138:15. On track.",
+    "source": "replay",
+    "device_id": "ava1.ring.device.HGUYZ5NB...A6OEZW",
+    "reasoning": "Matched resident description (older woman, grey hair). Within baseline window."
+  },
+  {
+    "id": "evt_d20_003",
+    "time": "2026-10-20T17:06:00Z",
+    "type": "observation",
+    "severity": "info",
+    "title": "Package delivered",
+    "summary": "Delivery driver in a uniform left a brown box on the top step.",
+    "source": "ring_live",
+    "device_id": "ava1.ring.device.HGUYZ5NB...A6OEZW",
+    "frame_url": "/api/frames/porch_package.jpg"
+  },
+  {
+    "id": "evt_d20_004",
+    "time": "2026-10-20T17:06:00Z",
+    "type": "agent_thought",
+    "severity": "info",
+    "title": "Tracking package",
+    "summary": "Package first seen 10:06. I'll check whether she brings it in. Usually within an hour.",
+    "source": "ring_live",
+    "device_id": "ava1.ring.device.HGUYZ5NB...A6OEZW"
+  },
+  {
+    "id": "evt_d20_005",
+    "time": "2026-10-20T19:10:00Z",
+    "type": "agent_thought",
+    "severity": "info",
+    "title": "Still outside",
+    "summary": "Package has been out 2h04m. She hasn't been seen at the door since 7:48. Not alerting yet: her afternoon walk is usually around 1pm.",
+    "source": "ring_live",
+    "device_id": "ava1.ring.device.HGUYZ5NB...A6OEZW",
+    "frame_url": "/api/frames/porch_package.jpg"
+  },
+  {
+    "id": "evt_d20_006",
+    "time": "2026-10-20T20:20:00Z",
+    "type": "package_unattended",
+    "severity": "notice",
+    "title": "Package still outside",
+    "summary": "A brown box has been on Mom's steps since 10:06am (3h14m). She usually brings deliveries in within an hour.",
+    "source": "ring_live",
+    "device_id": "ava1.ring.device.HGUYZ5NB...A6OEZW",
+    "reasoning": "Package present 3h14m > 3h threshold. Resident last seen 7:48, and she missed her ~1pm walk. Could be heavy, could be stolen. Worth a gentle check-in.",
+    "frame_url": "/api/frames/porch_package.jpg"
+  },
+  {
+    "id": "evt_d20_007",
+    "time": "2026-10-20T20:20:00Z",
+    "type": "alert_sent",
+    "severity": "notice",
+    "title": "Sent to family",
+    "summary": "\ud83d\udcf1 Telegram \u2192 Ade: \"The package from this morning is still outside Mom's door (3h). Maybe give her a call?\"",
+    "source": "ring_live",
+    "device_id": "ava1.ring.device.HGUYZ5NB...A6OEZW",
+    "related_id": "evt_d20_006"
+  },
+  {
+    "id": "evt_d20_008",
+    "time": "2026-10-20T21:12:00Z",
+    "type": "observation",
+    "severity": "info",
+    "title": "Visitor at the door",
+    "summary": "Man in a grey hoodie holding a clipboard, no uniform or company logo. Rang the doorbell, left after 2 minutes.",
+    "source": "replay",
+    "device_id": "ava1.ring.device.HGUYZ5NB...A6OEZW"
+  },
+  {
+    "id": "evt_d20_009",
+    "time": "2026-10-20T21:13:00Z",
+    "type": "repeat_visitor",
+    "severity": "notice",
+    "title": "Same visitor, 3rd time this week",
+    "summary": "A man matching \"grey hoodie, clipboard, no uniform\" also came Sunday and Monday. No delivery, no scheduled visit.",
+    "source": "replay",
+    "device_id": "ava1.ring.device.HGUYZ5NB...A6OEZW",
+    "reasoning": "Visitor signature matches visits Sun 15:40 and Mon 11:05 (similarity 0.82). Unscheduled, no uniform, repeated door-to-door visits to an older adult living alone: a common pattern in doorstep scams."
+  },
+  {
+    "id": "evt_d20_010",
+    "time": "2026-10-20T21:13:00Z",
+    "type": "alert_sent",
+    "severity": "notice",
+    "title": "Sent to family",
+    "summary": "\ud83d\udcf1 Telegram \u2192 Ade: \"Someone with a clipboard has come to Mom's door 3 times this week. Might be worth asking her about it.\"",
+    "source": "replay",
+    "device_id": "ava1.ring.device.HGUYZ5NB...A6OEZW",
+    "related_id": "evt_d20_009"
+  },
+  {
+    "id": "evt_d20_011",
+    "time": "2026-10-20T22:05:00Z",
+    "type": "observation",
+    "severity": "info",
+    "title": "Mom brought the package in",
+    "summary": "Older woman picked up the brown box from the steps and went inside.",
+    "source": "ring_live",
+    "device_id": "ava1.ring.device.HGUYZ5NB...A6OEZW",
+    "frame_url": "/api/frames/porch_package.jpg"
+  },
+  {
+    "id": "evt_d20_012",
+    "time": "2026-10-20T22:05:00Z",
+    "type": "resolved",
+    "severity": "info",
+    "title": "Package brought in",
+    "summary": "Mom brought the package in at 3:05pm.",
+    "source": "ring_live",
+    "device_id": "ava1.ring.device.HGUYZ5NB...A6OEZW",
+    "related_id": "evt_d20_006"
+  },
+  {
+    "id": "evt_d20_013",
+    "time": "2026-10-21T03:00:00Z",
+    "type": "daily_summary",
+    "severity": "info",
+    "title": "Today at Mom's",
+    "summary": "Calm day with two things worth knowing: a package sat outside for 5 hours, and the clipboard visitor came back a 3rd time.",
+    "source": "replay",
+    "device_id": "ava1.ring.device.HGUYZ5NB...A6OEZW",
+    "reasoning": "1 delivery, 2 visitors, 2 alerts, routine mostly normal (missed afternoon walk)."
+  }
+]

@@ -1,0 +1,110 @@
+[
+  {
+    "id": "evt_d21_014",
+    "time": "2026-10-21T10:12:00Z",
+    "type": "observation",
+    "severity": "info",
+    "title": "Front door opened at night",
+    "summary": "Older woman in a robe stepped onto the porch, looked around, and went back in after 4 minutes.",
+    "source": "replay",
+    "device_id": "ava1.ring.device.HGUYZ5NB...A6OEZW"
+  },
+  {
+    "id": "evt_d21_015",
+    "time": "2026-10-21T10:16:00Z",
+    "type": "night_activity",
+    "severity": "urgent",
+    "title": "Mom was outside at 3:12am",
+    "summary": "She stood on the porch for 4 minutes in the middle of the night, then went back inside.",
+    "source": "replay",
+    "device_id": "ava1.ring.device.HGUYZ5NB...A6OEZW",
+    "reasoning": "Door activity at 03:12. In 14 days she has never been at the door between 11pm and 6am. Night-time wandering can be an early sign of confusion; families usually want to know."
+  },
+  {
+    "id": "evt_d21_016",
+    "time": "2026-10-21T10:16:00Z",
+    "type": "alert_sent",
+    "severity": "urgent",
+    "title": "Sent to family",
+    "summary": "\ud83d\udcf1 Telegram \u2192 Ade: \"Mom stepped outside at 3:12am and went back in after 4 minutes. She's inside now.\"",
+    "source": "replay",
+    "device_id": "ava1.ring.device.HGUYZ5NB...A6OEZW",
+    "related_id": "evt_d21_015"
+  },
+  {
+    "id": "evt_d21_017",
+    "time": "2026-10-21T15:15:00Z",
+    "type": "agent_thought",
+    "severity": "info",
+    "title": "Routine check",
+    "summary": "Her usual first time outside is 7:30\u20138:15. Not seen yet. Waiting a bit longer: she was up at 3am.",
+    "source": "replay",
+    "device_id": "ava1.ring.device.HGUYZ5NB...A6OEZW",
+    "reasoning": "Baseline: median 7:52, 14 days, always before 8:30."
+  },
+  {
+    "id": "evt_d21_018",
+    "time": "2026-10-21T16:30:00Z",
+    "type": "agent_thought",
+    "severity": "info",
+    "title": "Still nothing",
+    "summary": "9:30 and no activity at the door. That's later than any day in the last two weeks. The newspaper is still on the step.",
+    "source": "replay",
+    "device_id": "ava1.ring.device.HGUYZ5NB...A6OEZW",
+    "reasoning": "Latest first-out in baseline was 8:27. Now 63 min past it."
+  },
+  {
+    "id": "evt_d21_019",
+    "time": "2026-10-21T16:45:00Z",
+    "type": "routine_missed",
+    "severity": "urgent",
+    "title": "Mom hasn't been out this morning",
+    "summary": "It's 9:45 and she hasn't come to the door. Every day for two weeks she's been out by 8:30. The newspaper is still on the step.",
+    "source": "replay",
+    "device_id": "ava1.ring.device.HGUYZ5NB...A6OEZW",
+    "reasoning": "No resident activity 78 min past her latest-ever first-out time, plus night activity at 3:12am. Escalating to urgent: a phone call is the right next step."
+  },
+  {
+    "id": "evt_d21_020",
+    "time": "2026-10-21T16:45:00Z",
+    "type": "alert_sent",
+    "severity": "urgent",
+    "title": "Sent to family",
+    "summary": "\ud83d\udcf1 Telegram \u2192 Ade: \"Mom hasn't come to the door this morning (usually out by 8:30) and she was up at 3am. Please call her.\"",
+    "source": "replay",
+    "device_id": "ava1.ring.device.HGUYZ5NB...A6OEZW",
+    "related_id": "evt_d21_019"
+  },
+  {
+    "id": "evt_d21_021",
+    "time": "2026-10-21T17:20:00Z",
+    "type": "observation",
+    "severity": "info",
+    "title": "Mom stepped outside",
+    "summary": "Older woman picked up the newspaper and waved at a neighbour.",
+    "source": "replay",
+    "device_id": "ava1.ring.device.HGUYZ5NB...A6OEZW"
+  },
+  {
+    "id": "evt_d21_022",
+    "time": "2026-10-21T17:20:00Z",
+    "type": "resolved",
+    "severity": "info",
+    "title": "Mom is up",
+    "summary": "She came to the door at 10:20am and picked up the newspaper.",
+    "source": "replay",
+    "device_id": "ava1.ring.device.HGUYZ5NB...A6OEZW",
+    "related_id": "evt_d21_019"
+  },
+  {
+    "id": "evt_d21_023",
+    "time": "2026-10-22T03:00:00Z",
+    "type": "daily_summary",
+    "severity": "urgent",
+    "title": "Today at Mom's",
+    "summary": "Worth a conversation: she was outside at 3am and was up much later than usual. She seemed fine at 10:20.",
+    "source": "replay",
+    "device_id": "ava1.ring.device.HGUYZ5NB...A6OEZW",
+    "reasoning": "1 night event, 1 missed routine (resolved), 0 deliveries, 0 visitors."
+  }
+]
