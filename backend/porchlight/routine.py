@@ -37,28 +37,28 @@ def _stat(label: str, key: str, times: list[time], days: int) -> RoutineStat:
     return RoutineStat(label, key, _from_minutes(med), _from_minutes(max(mins)), max(15, int(spread)), len(times))
 
 
-def first_out_today(store: Store, day: date, tz: ZoneInfo) -> datetime | None:
+def first_out_today(store: Store, day: date, tz: ZoneInfo, source: str | None = None) -> datetime | None:
     start = datetime.combine(day, time(4, 0), tz)
-    obs = store.observations(start, start + timedelta(hours=20), RESIDENT_ACTIVITIES)
+    obs = store.observations(start, start + timedelta(hours=20), RESIDENT_ACTIVITIES, source)
     return obs[0].time.astimezone(tz) if obs else None
 
 
-def afternoon_out(store: Store, day: date, tz: ZoneInfo) -> datetime | None:
+def afternoon_out(store: Store, day: date, tz: ZoneInfo, source: str | None = None) -> datetime | None:
     start = datetime.combine(day, time(11, 30), tz)
-    obs = store.observations(start, start + timedelta(hours=5), ["resident_leaving"])
+    obs = store.observations(start, start + timedelta(hours=5), ["resident_leaving"], source)
     return obs[0].time.astimezone(tz) if obs else None
 
 
-def learn(store: Store, today: date, tz: ZoneInfo, days: int = 14) -> list[RoutineStat]:
+def learn(store: Store, today: date, tz: ZoneInfo, days: int = 14, source: str | None = None) -> list[RoutineStat]:
     first, walk = [], []
     learned_days = 0
     for i in range(1, days + 1):
         d = today - timedelta(days=i)
-        f = first_out_today(store, d, tz)
+        f = first_out_today(store, d, tz, source)
         if f:
             learned_days += 1
             first.append(f.timetz().replace(tzinfo=None))
-        w = afternoon_out(store, d, tz)
+        w = afternoon_out(store, d, tz, source)
         if w:
             walk.append(w.timetz().replace(tzinfo=None))
     return [
@@ -81,9 +81,9 @@ def similarity(a: str, b: str) -> float:
 
 
 def visitor_history(store: Store, signature: str, now: datetime, tz: ZoneInfo,
-                    days: int = 7, threshold: float = 0.5) -> list[datetime]:
+                    days: int = 7, threshold: float = 0.5, source: str | None = None) -> list[datetime]:
     """Earlier visits (one per day, not counting today) by someone matching this signature."""
-    obs = store.observations(now - timedelta(days=days), now, ["visitor_at_door"])
+    obs = store.observations(now - timedelta(days=days), now, ["visitor_at_door"], source)
     today = now.astimezone(tz).date()
     seen: dict[date, datetime] = {}
     for o in obs:

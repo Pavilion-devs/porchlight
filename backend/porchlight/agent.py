@@ -72,7 +72,8 @@ class CareAgent:
             """List what the doorbell saw in the last N hours (times are local)."""
             now = self._ctx.time
             self._think("Looking back", f"Checking the last {hours}h of door activity.")
-            obs = brain.store.observations(now - timedelta(hours=hours), now + timedelta(seconds=1))
+            obs = brain.store.observations(now - timedelta(hours=hours), now + timedelta(seconds=1),
+                                           source=self._ctx.source)
             rows = [f"{hhmm(o.time.astimezone(tz))}: {o.activity} - {o.description}" for o in obs
                     if o.activity != "none"]
             return "\n".join(rows[-40:]) or "No activity at the door in that window."
@@ -83,8 +84,12 @@ class CareAgent:
             now = self._ctx.time
             today = now.astimezone(tz).date()
             self._think("Checking the routine", f"Comparing today with {name}'s usual days.")
-            stats = routine.learn(brain.store, today, tz)
-            first = routine.first_out_today(brain.store, today, tz)
+            src = self._ctx.source
+            stats = routine.learn(brain.store, today, tz, source=src)
+            first = routine.first_out_today(brain.store, today, tz, src)
+            if not any(r.days for r in stats):
+                return (f"No routine learned yet: there is no history of {name}'s door activity. "
+                        "Don't assume anything about her usual times.")
             lines = [f"{r.label}: usually ~{hhmm(r.usual)}, latest {hhmm(r.latest)}, seen on {r.days} of the "
                      f"learned days" for r in stats]
             lines.append(f"Today's first time outside: {hhmm(first) if first else 'not yet'}")
@@ -96,7 +101,7 @@ class CareAgent:
         def get_visitor_history(signature: str) -> str:
             """Earlier visits this week by someone matching a comma-separated trait signature."""
             self._think("Checking visitor history", f"Has someone like \"{signature}\" been here before?")
-            visits = routine.visitor_history(brain.store, signature, self._ctx.time, tz)
+            visits = routine.visitor_history(brain.store, signature, self._ctx.time, tz, source=self._ctx.source)
             return ("Earlier visits: " + ", ".join(v.astimezone(tz).strftime("%a %-I:%M%p") for v in visits)
                     if visits else "No earlier visits by anyone matching that description this week.")
 
@@ -105,7 +110,8 @@ class CareAgent:
             """Messages already sent to the family today, to avoid repeating ourselves."""
             now = self._ctx.time
             start = datetime.combine(now.astimezone(tz).date(), time(0, 0), tz)
-            sent = [e for e in brain.store.events(since=iso(start)) if e["type"] == "alert_sent"]
+            sent = [e for e in brain.store.events(since=iso(start), until=iso(now + timedelta(seconds=1)),
+                                                  source=self._ctx.source) if e["type"] == "alert_sent"]
             return "\n".join(e["summary"] for e in sent) or "No alerts sent today."
 
         return [get_recent_activity, get_routine_baseline, get_visitor_history, get_alerts_sent_today]

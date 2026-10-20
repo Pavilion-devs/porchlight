@@ -126,7 +126,8 @@ class Brain:
                 obs.time, obs.source, obs.frame_name, key=f"night:{local.date()}"))
 
         if obs.person and not resident and obs.activity == "visitor_at_door" and obs.visitor_signature:
-            earlier = routine.visitor_history(self.store, obs.visitor_signature, obs.time, self.tz)
+            earlier = routine.visitor_history(self.store, obs.visitor_signature, obs.time, self.tz,
+                                              source=obs.source)
             if len(earlier) >= 2:
                 days = ", ".join(e.astimezone(self.tz).strftime("%a %-I:%M%p").lower() for e in earlier)
                 await self._escalate(Situation(
@@ -179,9 +180,9 @@ class Brain:
                 now, source, s.package_frame, key=f"package:{iso(s.package_since)}"))
 
         today = local.date()
-        stats = {r.key: r for r in routine.learn(self.store, today, self.tz)}
+        stats = {r.key: r for r in routine.learn(self.store, today, self.tz, source=source)}
         first = stats["first_out"]
-        if first.latest and first.days >= 3 and not routine.first_out_today(self.store, today, self.tz):
+        if first.latest and first.days >= 3 and not routine.first_out_today(self.store, today, self.tz, source):
             deadline = datetime.combine(today, first.latest, self.tz) + timedelta(
                 minutes=self.settings.routine_grace_minutes)
             if local >= deadline:
@@ -238,7 +239,8 @@ class Brain:
     async def daily_summary(self, now: datetime, source: str) -> dict:
         local = now.astimezone(self.tz)
         start = datetime.combine(local.date(), time(0, 0), self.tz)
-        events = [e for e in self.store.events(since=iso(start), until=iso(now + timedelta(seconds=1)))
+        events = [e for e in self.store.events(since=iso(start), until=iso(now + timedelta(seconds=1)),
+                                               source=source)
                   if e["type"] not in ("agent_thought", "daily_summary")]
         summary = None
         if self.agent:
@@ -249,7 +251,7 @@ class Brain:
         if summary is None:
             summary = self.summary_counts(events)
         summary["date"] = str(local.date())
-        self.store.put(f"summary:{local.date()}", summary)
+        self.store.put(f"summary:{source}:{local.date()}", summary)
         self.emit("daily_summary", "urgent" if summary["mood"] == "concern" else "info",
                   f"Today at {self.settings.parent_name}'s", summary["headline"], now, source,
                   reasoning=summary.get("body"))

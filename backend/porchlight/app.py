@@ -127,9 +127,19 @@ app = FastAPI(title="Porchlight", lifespan=lifespan)
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 
+def active_source(requested: str | None = None) -> str:
+    """Live and replayed data never mix: summaries/baselines follow the replay while it runs (or ran last)."""
+    if requested in ("ring_live", "replay"):
+        return requested
+    if replayer.running:
+        return "replay"
+    latest = store.events(limit=1)
+    return latest[-1]["source"] if latest else "ring_live"
+
+
 @app.get("/api/events")
-def get_events(since: str | None = None, limit: int = 500):
-    return store.events(since=since, limit=limit)
+def get_events(since: str | None = None, limit: int = 500, source: str | None = None):
+    return store.events(since=since, limit=limit, source=source)
 
 
 @app.get("/api/live")
@@ -151,13 +161,15 @@ def get_frame(name: str):
 
 
 @app.get("/api/summary/today")
-def get_summary():
+def get_summary(source: str | None = None):
+    src = active_source(source)
     now = datetime.now(brain.tz)
-    saved = store.get(f"summary:{now.date()}")
+    saved = store.get(f"summary:{src}:{now.date()}")
     if saved:
         return saved
     start = datetime.combine(now.date(), time(0, 0), brain.tz)
-    events = [e for e in store.events(since=iso(start)) if e["type"] not in ("agent_thought", "daily_summary")]
+    events = [e for e in store.events(since=iso(start), source=src)
+              if e["type"] not in ("agent_thought", "daily_summary")]
     summary = brain.summary_counts(events)
     summary.update(date=str(now.date()), headline="So far today: " + summary["headline"][0].lower()
                    + summary["headline"][1:])
@@ -165,12 +177,13 @@ def get_summary():
 
 
 @app.get("/api/baseline")
-def get_baseline():
+def get_baseline(source: str | None = None):
+    src = active_source(source)
     now = datetime.now(brain.tz)
     today = now.date()
-    stats = {r.key: r for r in routine.learn(store, today, brain.tz)}
-    actual = {"first_out": routine.first_out_today(store, today, brain.tz),
-              "walk": routine.afternoon_out(store, today, brain.tz)}
+    stats = {r.key: r for r in routine.learn(store, today, brain.tz, source=src)}
+    actual = {"first_out": routine.first_out_today(store, today, brain.tz, src),
+              "walk": routine.afternoon_out(store, today, brain.tz, src)}
     items = []
     for key, r in stats.items():
         got = actual[key]
@@ -186,14 +199,14 @@ def get_baseline():
                       "status": state})
     night_start = datetime.combine(today, time(settings.night_start_hour), brain.tz)
     night = store.observations(night_start, night_start + timedelta(
-        hours=settings.night_end_hour - settings.night_start_hour))
+        hours=settings.night_end_hour - settings.night_start_hour), source=src)
     night = [o for o in night if o.person]
     items.append({"label": f"Quiet at night ({settings.night_start_hour}–{settings.night_end_hour}am)",
                   "usual": "no activity", "window_minutes": 0,
                   "today": hhmm(night[0].time.astimezone(brain.tz)) if night else "no activity",
                   "status": "late" if night else "ok"})
     return {"parent_name": settings.parent_name, "days_learned": max((r.days for r in stats.values()), default=0),
-            "items": items}
+            "items": items, "source": src}
 
 
 @app.post("/api/demo/{scenario}")

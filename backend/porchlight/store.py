@@ -32,8 +32,11 @@ class Store:
             self.db.execute("INSERT OR REPLACE INTO events VALUES (?, ?, ?, ?)",
                             (event["id"], event["time"], event["type"], json.dumps(event)))
 
-    def events(self, since: str | None = None, until: str | None = None, limit: int = 500) -> list[dict]:
+    def events(self, since: str | None = None, until: str | None = None, limit: int = 500,
+               source: str | None = None) -> list[dict]:
         q, args = "SELECT body FROM events WHERE 1=1", []
+        if source:
+            q, args = q + " AND json_extract(body, '$.source') = ?", args + [source]
         if since:
             q, args = q + " AND time >= ?", args + [since]
         if until:
@@ -50,8 +53,10 @@ class Store:
                             (obs.time.isoformat(), obs.source, obs.activity, json.dumps(obs.to_json())))
 
     def observations(self, since: datetime, until: datetime | None = None,
-                     activities: list[str] | None = None) -> list[Observation]:
+                     activities: list[str] | None = None, source: str | None = None) -> list[Observation]:
         q, args = "SELECT body FROM observations WHERE time >= ?", [since.isoformat()]
+        if source:
+            q, args = q + " AND source = ?", args + [source]
         if until:
             q, args = q + " AND time < ?", args + [until.isoformat()]
         if activities:

@@ -8,10 +8,10 @@ The backend runs at `http://localhost:8000`. Everything the dashboard needs come
 
 | Method | Path | Returns |
 |---|---|---|
-| GET | `/api/events?since=<iso>&limit=<n>` | `PorchEvent[]`, oldest first |
+| GET | `/api/events?since=<iso>&limit=<n>&source=<ring_live\|replay>` | `PorchEvent[]`, oldest first. `source` is optional: omit it to get both |
 | GET | `/api/live` | `LiveView`: the latest Ring frame plus what the AI sees in it |
-| GET | `/api/summary/today` | `DailySummary` |
-| GET | `/api/baseline` | `Baseline`: the parent's usual routine vs today |
+| GET | `/api/summary/today?source=` | `DailySummary` for one source (default: replay while a demo runs or if it ran last, else live) |
+| GET | `/api/baseline?source=` | `Baseline`: the parent's usual routine vs today (same `source` default) |
 | GET | `/api/status` | `Status`: is the Ring stream connected, is the token valid, demo mode |
 | GET | `/api/frames/<name>.jpg` | JPEG image (`frame_url` values point here) |
 | POST | `/api/demo/<scenario>` | Starts a replay scenario: `routine_missed`, `repeat_visitor`, `night_activity`, `full_day`. Returns `{ "started": true }` |
@@ -43,7 +43,7 @@ On connect, the server sends one `status` and one `live` message, then streams n
 | `daily_summary` | Evening digest | Summary card |
 | `resolved` | A situation cleared ("Mom brought the package in") | Green check on the related card (`related_id`) |
 
-`source` is `"ring_live"` (real Ring stream) or `"replay"` (scenario replayer). **Always show it** (e.g. a LIVE / REPLAY badge). We're honest in the demo about what's simulated.
+`source` is `"ring_live"` (real Ring stream) or `"replay"` (scenario replayer). **Always show it** (e.g. a LIVE / REPLAY badge). We're honest in the demo about what's simulated. The backend never mixes the two: the agent, routine and summaries only use data from the same source.
 
 `severity`: `info` (grey), `notice` (amber), `urgent` (red).
 

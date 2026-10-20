@@ -61,6 +61,7 @@ export interface Baseline {
   parent_name: string;
   days_learned: number;
   items: RoutineItem[];
+  source: Source;
 }
 
 export interface Status {

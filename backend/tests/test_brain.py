@@ -75,21 +75,21 @@ async def test_package_taken_by_stranger(brain):
 
 
 async def test_routine_missed_after_latest_usual_time(brain):
-    seed_history(brain.store, DAY, TZ)
-    await brain.tick(at(8, 15))
+    seed_history(brain.store, DAY, TZ)  # replay history
+    await brain.tick(at(8, 15), "replay")
     assert "routine_missed" not in types(brain)
-    await brain.tick(at(9, 40))
+    await brain.tick(at(9, 40), "replay")
     assert "routine_missed" in types(brain)
     await brain.on_observation(Observation(at(10, 20), "Resident gets the paper", person=True,
-                                           is_resident_likely=True, activity="resident_at_door"))
+                                           is_resident_likely=True, activity="resident_at_door", source="replay"))
     assert "resolved" in types(brain)
 
 
 async def test_no_routine_alert_when_she_was_out(brain):
     seed_history(brain.store, DAY, TZ)
     await brain.on_observation(Observation(at(7, 50), "Resident gets the paper", person=True,
-                                           is_resident_likely=True, activity="resident_at_door"))
-    await brain.tick(at(11, 0))
+                                           is_resident_likely=True, activity="resident_at_door", source="replay"))
+    await brain.tick(at(11, 0), "replay")
     assert "routine_missed" not in types(brain)
 
 
@@ -104,8 +104,17 @@ async def test_repeat_visitor_needs_two_earlier_days(brain):
     seed_history(brain.store, DAY, TZ)  # seeds the clipboard man on the two previous days
     sig = "man, grey hoodie, clipboard, no uniform"
     await brain.on_observation(Observation(at(14, 12), "Man with clipboard", person=True,
-                                           activity="visitor_at_door", visitor_signature=sig))
+                                           activity="visitor_at_door", visitor_signature=sig, source="replay"))
     assert "repeat_visitor" in types(brain)
+
+
+async def test_live_never_uses_replay_history(brain):
+    """Seeded replay history must not leak into live decisions (a bug we hit on the real stream)."""
+    seed_history(brain.store, DAY, TZ)
+    await brain.tick(at(9, 40), "ring_live")  # live has no learned routine -> no routine alert
+    await brain.on_observation(Observation(at(14, 12), "Man with clipboard", person=True, activity="visitor_at_door",
+                                           visitor_signature="man, grey hoodie, clipboard, no uniform"))
+    assert "routine_missed" not in types(brain) and "repeat_visitor" not in types(brain)
 
 
 async def test_new_visitor_is_not_flagged(brain):
