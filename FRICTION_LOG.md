@@ -53,3 +53,28 @@ Severity: **High** (blocked us) · **Medium** (cost real time) · **Low** (annoy
 
 ### 6. (Positive) Playground scene selection works for our own client
 - Clicking Package / Vehicle / Motion in the Playground changes the footage our own WHEP client receives, and it persists after the popup closes. Very useful for demos. Worth documenting.
+
+---
+
+## AWS
+
+### 7. `aws login` credentials don't work in boto3 without an extra package
+- **Task:** Call Bedrock from Python (boto3) on a machine where the AWS CLI works.
+- **Steps:** `aws sts get-caller-identity` works; `boto3.client("bedrock-runtime")` in a fresh venv.
+- **Expected:** boto3 picks up the same credentials as the CLI.
+- **Actual:** `MissingDependencyException: Using the login credential provider requires an additional dependency. You will need to pip install "botocore[crt]"`.
+- **Severity:** Low (clear message, but every new environment hits it)
+- **Workaround:** `pip install "botocore[crt]"`.
+- **Suggestion:** Bundle the login provider's dependency, or mention it in the Bedrock Python quickstart.
+
+### 8. Bedrock lists models the account can't call
+- **Task:** Pick the newest Claude model for vision.
+- **Steps:** `aws bedrock list-foundation-models` shows Sonnet 5.5 / Haiku 5.5 as `ACTIVE`; `converse` with them.
+- **Expected:** Listed + ACTIVE means callable, or the listing shows access status.
+- **Actual:** `AccessDeniedException: ... is not available for this account`. We found what works by trial calls.
+- **Severity:** Low–Medium
+- **Workaround:** Probe each model with a 5-token call.
+- **Suggestion:** Show per-account access in `list-foundation-models` / `list-inference-profiles`.
+
+### 9. (Positive) Strands structured output made the agent dependable
+- `invoke_async(..., structured_output_model=PydanticModel)` gave us typed decisions after free-form tool use, with no JSON parsing code. Tools as plain decorated Python functions made the agent easy to test. The first working agent took under an hour.
