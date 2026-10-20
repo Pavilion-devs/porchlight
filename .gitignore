@@ -1,0 +1,27 @@
+# Secrets: never commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Node
+node_modules/
+dist/
+
+# Local data / captured media
+frames/
+*.sqlite
+*.db
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
