@@ -79,13 +79,13 @@ Everything below was tested against the real Ring API and Bedrock, not just read
 
 ## 4. Who does what
 
-| | **Teammate: backend** | **Ola + Claude: everything else** |
+| | **Ola + Claude: backend** | **Teammate: dashboard** |
 |---|---|---|
-| Builds | Stream watcher, vision, brain/agent, alerts, replayer, API (§5 items 2–6) | Repo setup, **dashboard** (item 7), data contract + mock data |
-| Owns | Backend README section, AWS notes for the feedback form | **Friction log**, product feedback, write-up, demo video, Devpost submission |
-| Together | Data contract (§6) on day one, integration Thursday, final demo run | |
+| Builds | Repo setup, stream watcher, vision, brain/agent, alerts, replayer, API (§5 items 1–6) | **Dashboard** (§5 item 7) in `frontend/` |
+| Owns | Data contract + `shared/mock-events.json` (delivered Tue), **friction log**, product feedback, write-up, Devpost submission | Dashboard UX + visuals, screen recordings of the dashboard for the demo video |
+| Together | Data contract (§6) on day one, integration Thursday, demo video, final demo run | |
 
-Claude has already written working spikes for the hardest parts (WHEP frames, Bedrock vision). The backend should start from `spikes/`.
+The backend starts from `spikes/`, which already has working code for the hardest parts (WHEP frames, Bedrock vision). The teammate never waits on the backend: they build against `shared/mock-events.json` and switch to the real WebSocket on Thursday.
 
 ---
 
@@ -96,20 +96,20 @@ Claude has already written working spikes for the hardest parts (WHEP frames, Be
 - [x] `plan.md`, `FRICTION_LOG.md`, `spikes/`
 - [ ] Folder skeleton: `backend/`, `frontend/`, `shared/` (contract + mock events)
 
-### 2. Stream watcher (backend)
+### 2. Stream watcher (Ola + Claude)
 - [ ] Open a WHEP session, receive video, sample 1 frame every 2–3 s
 - [ ] **Reconnect automatically** when Ring closes the session (~8 s), with backoff on errors
 - [ ] Always `DELETE` the session on exit
 - [ ] Keep the latest frame in memory for the dashboard's "live" view
 - [ ] Read the token from `.env`, with a clear error when it has expired (401)
 
-### 3. Vision (backend)
+### 3. Vision (Ola + Claude)
 - [ ] Send each sampled frame to **Haiku 4.5** on Bedrock and get **structured JSON** back:
   `{ person: bool, person_desc, package: bool, package_desc, vehicle: bool, activity, confidence }`
 - [ ] Skip frames that haven't changed (cheap pixel-diff) to save cost
 - [ ] Use **Sonnet 4.6** only for the escalation/summary step
 
-### 4. Brain / agent (backend)
+### 4. Brain / agent (Ola + Claude)
 - [ ] Turn observations into **state**: "package on porch since 14:02," "person seen 3× this week"
 - [ ] Rules + agent reasoning for:
   - `package_unattended`: a package has been present more than N hours (demo: minutes, on a compressed clock)
@@ -120,18 +120,18 @@ Claude has already written working spikes for the hardest parts (WHEP frames, Be
 - [ ] Strands agent with tools: `get_recent_observations`, `get_baseline`, `send_alert`, `write_summary`
 - [ ] Every decision stores a short **reasoning string**, which the dashboard shows live
 
-### 5. Alerts (backend)
+### 5. Alerts (Ola + Claude)
 - [ ] Telegram bot: text + the frame image + severity
 - [ ] De-duplicate so the same situation isn't alerted twice
 
-### 6. Scenario replayer + seeded history (backend)
+### 6. Scenario replayer + seeded history (Ola + Claude)
 - [ ] Seed **14 days** of believable routine events so "day 15" has a baseline
 - [ ] Replay a scripted demo day on a **compressed clock** (one day in about 60 s)
 - [ ] Synthetic events use the **real Ring webhook payload format**, signed with our HMAC key, and go through the same handler as real webhooks
 - [ ] Everything synthetic is labelled `source: "replay"` and shown that way in the dashboard
 - [ ] Stretch: package it as a standalone open-source tool (Open Source mini challenge)
 
-### 7. Dashboard (Ola + Claude)
+### 7. Dashboard (Teammate)
 - [ ] **Live porch panel:** latest frame plus the AI's description
 - [ ] **Agent thinking panel:** the live stream of reasoning strings
 - [ ] **Timeline:** today's events with icons and severity
@@ -173,12 +173,12 @@ Any change to the contract goes in this section **before** it goes in code.
 
 ## 7. Schedule
 
-| Day | Teammate (backend) | Ola + Claude |
+| Day | Ola + Claude (backend) | Teammate (dashboard) |
 |---|---|---|
-| **Tue Oct 20** | Set up accounts (Ring dev, Playground token); run `spikes/`; stream watcher with reconnect | Repo skeleton, data contract, mock events, dashboard layout |
-| **Wed Oct 21** | Vision JSON, brain rules + Strands agent, Telegram alerts | Dashboard panels: live, thinking, timeline, summary |
-| **Thu Oct 22** | Replayer + seeded history, API + WebSocket, **integration** | Wire the dashboard to the real API, video script, write-up draft, friction log |
-| **Fri Oct 23 (a.m.)** | Bug fixes only | Record + edit video, **submit before 12pm PDT** |
+| **Tue Oct 20** | Repo skeleton, data contract + mock events, stream watcher with reconnect, vision JSON | Read §1, §5.7, §6; set up `frontend/` (React + Vite + TS); dashboard layout on mock events |
+| **Wed Oct 21** | Brain rules + Strands agent, Telegram alerts, API + WebSocket | Dashboard panels: live, thinking, timeline, summary, routine view |
+| **Thu Oct 22** | Replayer + seeded history, **integration**, friction log, write-up draft | Switch to the real API/WebSocket, polish, LIVE vs REPLAY badge, demo video script |
+| **Fri Oct 23 (a.m.)** | Bug fixes only, **submit before 12pm PDT** | Record + edit the demo video |
 
 **Rule:** after Thursday 6pm WAT, no new features, only fixes.
 
