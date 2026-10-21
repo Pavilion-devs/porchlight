@@ -100,7 +100,7 @@ Run `make` on its own to see every command.
 | [`shared/`](shared/) | The contract between backend and dashboard: [API + messages](shared/CONTRACT.md), [TypeScript types](shared/types.ts) and [mock data](shared/mock/) |
 | [`scripts/`](scripts/) | `doctor.py` (`make check`) and `telegram_setup.py` (`make telegram`) |
 | [`spikes/`](spikes/) | The first standalone experiments that proved the Ring stream and Bedrock vision work |
-| [`docs/`](docs/) | [Build plan](docs/plan.md) and [friction log](docs/FRICTION_LOG.md) (what was hard about the Ring and AWS developer tools) |
+| [`docs/`](docs/) | [Build plan](docs/plan.md), [evaluation brief](docs/onboarding-eval.md) and [friction log](docs/FRICTION_LOG.md) (what was hard about the Ring and AWS developer tools) |
 
 ## Troubleshooting
 
