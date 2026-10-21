@@ -22,7 +22,7 @@ class Settings:
     watcher_enabled: bool = _bool("WATCHER_ENABLED", True)
     sample_every_s: float = float(os.getenv("SAMPLE_EVERY_S", "3"))
 
-    # AWS Bedrock (models enabled on our account, see plan.md §2)
+    # AWS Bedrock (models enabled on our account, see docs/plan.md §2)
     aws_region: str = os.getenv("AWS_REGION", "us-east-1")
     vision_model: str = os.getenv("VISION_MODEL", "us.anthropic.claude-haiku-4-5-20251001-v1:0")
     agent_model: str = os.getenv("AGENT_MODEL", "us.anthropic.claude-sonnet-4-6")

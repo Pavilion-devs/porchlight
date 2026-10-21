@@ -82,10 +82,10 @@ Everything below was tested against the real Ring API and Bedrock, not just read
 | | **Ola + Claude: backend** | **Teammate: dashboard** |
 |---|---|---|
 | Builds | Repo setup, stream watcher, vision, brain/agent, alerts, replayer, API (§5 items 1–6) | **Dashboard** (§5 item 7) in `frontend/` |
-| Owns | Data contract + `shared/mock-events.json` (delivered Tue), **friction log**, product feedback, write-up, Devpost submission | Dashboard UX + visuals, screen recordings of the dashboard for the demo video |
+| Owns | Data contract + `shared/mock/` (delivered Tue), **friction log**, product feedback, write-up, Devpost submission | Dashboard UX + visuals, screen recordings of the dashboard for the demo video |
 | Together | Data contract (§6) on day one, integration Thursday, demo video, final demo run | |
 
-The backend starts from `spikes/`, which already has working code for the hardest parts (WHEP frames, Bedrock vision). The teammate never waits on the backend: they build against `shared/mock-events.json` and switch to the real WebSocket on Thursday.
+The backend starts from `spikes/`, which already has working code for the hardest parts (WHEP frames, Bedrock vision). The teammate never waits on the backend: they build against `shared/mock/` and switch to the real WebSocket on Thursday.
 
 ---
 
@@ -95,7 +95,7 @@ The backend starts from `spikes/`, which already has working code for the hardes
 
 ### 1. Repo setup (Ola + Claude, Tue) ✅
 - [x] `.gitignore` (blocks `.env`, keys, venvs, frames), `.env.example`, MIT `LICENSE`
-- [x] `plan.md`, `FRICTION_LOG.md`, `spikes/`
+- [x] `docs/plan.md`, `docs/FRICTION_LOG.md`, `spikes/`
 - [x] Folder skeleton: `backend/`, `frontend/`, `shared/` (contract + mock events)
 
 ### 2. Stream watcher (Ola + Claude)
@@ -140,7 +140,7 @@ The backend starts from `spikes/`, which already has working code for the hardes
 - [ ] **Daily summary card**
 - [ ] "Mom's routine" view: baseline vs today
 - [ ] Badge showing **LIVE (Ring)** vs **REPLAY**, for honesty
-- [ ] Builds against `shared/mock-events.json` first, then switches to the real WebSocket
+- [ ] Builds against `shared/mock/` first, then switches to the real WebSocket
 
 ---
 
@@ -205,7 +205,7 @@ Other endpoints:
 - [ ] Demo video < 3 min, public on YouTube/Vimeo, English, no copyrighted music
 - [ ] Text description: what it does and how it works
 - [ ] **Product feedback** for each tool (Ring API, Playground, Ring MCP, Bedrock, Strands): what worked, what didn't, onboarding, would we use it again
-- [ ] **Friction log** (up to +10%) → `FRICTION_LOG.md`
+- [ ] **Friction log** (up to +10%) → `docs/FRICTION_LOG.md`
 - [ ] Feature requests (optional)
 - [ ] Track: **Ring**. Mini challenges: **AWS Builder** (+ **Open Source** if the replayer ships)
 - [ ] Teammate added as a team member on Devpost

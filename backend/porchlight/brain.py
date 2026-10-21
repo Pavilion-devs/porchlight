@@ -176,7 +176,9 @@ class Brain:
             await self._escalate(Situation(
                 "package_unattended", "notice", "Package still outside",
                 f"A package has been outside {name}'s door since {hhmm(since)} "
-                f"({self._duration(now - s.package_since)}). {name} was last seen at the door at {hhmm(seen)}.",
+                f"({self._duration(now - s.package_since)}). "
+                + (f"{name} was last seen at the door at {hhmm(seen)}." if seen
+                   else f"{name} hasn't been seen at the door today."),
                 now, source, s.package_frame, key=f"package:{iso(s.package_since)}"))
 
         today = local.date()

@@ -157,3 +157,13 @@ async def test_scenarios_run_end_to_end(brain, scenario):
     assert expected in t, t
     assert received, "scenario should send at least one signed Ring webhook"
     assert all(e["source"] == "replay" for e in brain.store.events())
+
+
+async def test_package_scenario_only_tells_the_package_story(brain):
+    async def sink(raw, sig):
+        pass
+
+    await Replayer(brain, brain.store, TZ, KEY, sink, max_gap_s=0, min_gap_s=0).run("package", day=DAY)
+    assert "routine_missed" not in types(brain)
+    alert = next(e for e in brain.store.events() if e["type"] == "package_unattended")
+    assert "last seen at the door at 7:48" in alert["summary"], alert["summary"]

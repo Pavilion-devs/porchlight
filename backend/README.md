@@ -4,27 +4,17 @@ Ring live stream → frames → Claude vision on Bedrock → brain (rules) → *
 
 ## Run it
 
-```bash
-# from the repo root
-cp .env.example .env                       # fill in Ring credentials + Playground token (30-min lifetime)
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r backend/requirements.txt
-aws configure   # or `aws login`: needs Bedrock access to Claude Haiku 4.5 + Sonnet 4.6 in us-east-1
-
-cd backend
-uvicorn porchlight.app:app --port 8000
-```
-
-- Click **Package / Vehicle / Motion** in the Ring Developer Playground to choose what the sandbox doorbell shows. The watcher picks it up automatically.
-- Got a new Playground token? Paste it into `.env`. It's re-read on every request, so no restart is needed.
-- Run a scripted day (labelled `replay`): `curl -X POST localhost:8000/api/demo/full_day`.
-  Scenarios: `full_day`, `package`, `repeat_visitor`, `routine_missed`, `night_activity`.
-
-## Tests
+Setup and commands live in the [main README](../README.md#run-it). In short, from the repo root:
 
 ```bash
-cd backend && pytest -q          # rules, webhook signatures, every replay scenario (agent off, no AWS calls)
+make setup && make check
+make run            # live Ring stream + Bedrock
+make run-offline    # replay only, no Ring or AWS
+make demo           # play a scripted day (SCENARIO=full_day|package|repeat_visitor|routine_missed|night_activity)
+make test           # rules, webhook signatures, every replay scenario (agent off, no AWS calls)
 ```
+
+Without make: `cd backend && ../.venv/bin/uvicorn porchlight.app:app --port 8000`.
 
 ## How it fits together
 

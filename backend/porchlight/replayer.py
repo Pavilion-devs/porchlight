@@ -70,6 +70,9 @@ class Step:
 
 PKG_FRAME = "porch_package.jpg"
 
+MORNING = Step("07:48", "obs", "resident_at_door", f"An {RESIDENT} picked up the newspaper.",
+               ring=("motion_detected", "human"))
+
 SCENARIOS: dict[str, list[Step]] = {
     "night_activity": [
         Step("03:12", "obs", "resident_at_door", f"An {RESIDENT} in a robe stepped onto the porch and looked around.",
@@ -90,6 +93,7 @@ SCENARIOS: dict[str, list[Step]] = {
         Step("14:15", "obs", "none", "The porch is empty."),
     ],
     "package": [
+        MORNING,  # she's been out, so the only story is the package
         Step("10:06", "obs", "delivery", "A courier left a brown box on the top step.",
              ring=("motion_detected", "package_delivery"), extra={"package": True, "frame_name": PKG_FRAME}),
         Step("10:07", "obs", "none", "A brown box is sitting on the top step.",
@@ -100,11 +104,9 @@ SCENARIOS: dict[str, list[Step]] = {
     ],
 }
 SCENARIOS["full_day"] = (
-    [Step("07:48", "obs", "resident_at_door", f"An {RESIDENT} picked up the newspaper.",
-          ring=("motion_detected", "human"))]
-    + SCENARIOS["package"][:4]          # delivery, 12:00 + 13:10 checks
+    SCENARIOS["package"][:5]            # 07:48 newspaper, delivery, 12:00 + 13:10 checks
     + SCENARIOS["repeat_visitor"]       # 14:12
-    + SCENARIOS["package"][4:]          # 15:05 Mom brings the box in
+    + SCENARIOS["package"][5:]          # 15:05 Mom brings the box in
     + [Step("20:00", "summary")]
 )
 
