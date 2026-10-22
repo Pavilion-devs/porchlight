@@ -4,15 +4,16 @@ PORT    ?= 8000
 SCENARIO ?= full_day
 
 .DEFAULT_GOAL := help
-.PHONY: help setup check run run-offline demo test telegram
+.PHONY: help setup check run run-offline demo test telegram dashboard dashboard-dev deploy push-token
 
 help:  ## Show this list
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  make %-12s %s\n", $$1, $$2}'
 
-setup:  ## Create .venv, install the backend, create .env from the example
+setup:  ## Create .venv, install the backend + dashboard, create .env from the example
 	@test -d .venv || python3 -m venv .venv
 	$(PY) -m pip install -q --upgrade pip
 	$(PY) -m pip install -q -r backend/requirements.txt
+	cd dashboard && npm ci --silent && npm run build
 	@test -f .env || (cp .env.example .env && echo "Created .env. Fill it in (see README).")
 	@echo "Done. Next: fill in .env, then run 'make check'."
 
@@ -33,3 +34,15 @@ test:  ## Run the backend tests (no AWS or Ring calls)
 
 telegram:  ## Find your Telegram chat ID, save it to .env, send a test message
 	$(PY) scripts/telegram_setup.py
+
+dashboard:  ## Rebuild the dashboard (the backend serves it at http://localhost:8000)
+	cd dashboard && npm run build
+
+dashboard-dev:  ## Dashboard with hot reload on http://localhost:5173 (needs the backend running)
+	cd dashboard && npm run dev
+
+deploy:  ## Deploy to the AWS server (EC2): build, copy, restart
+	deploy/deploy.sh
+
+push-token:  ## Send the Ring Playground token from .env to the AWS server
+	deploy/push_token.sh

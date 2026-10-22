@@ -12,12 +12,13 @@ from datetime import datetime, time, timedelta, timezone
 from fastapi import FastAPI, HTTPException, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from . import routine, webhooks
 from .agent import CareAgent
 from .alerts import Notifier
 from .brain import Brain, hhmm, iso
-from .config import settings
+from .config import ROOT, settings
 from .hub import Hub
 from .replayer import SCENARIOS, Replayer
 from .ring import RingClient, token_expires_in_s
@@ -137,6 +138,16 @@ def active_source(requested: str | None = None) -> str:
     return latest[-1]["source"] if latest else "ring_live"
 
 
+def source_now(src: str) -> datetime:
+    """A replayed day runs on its own clock: judge it as of its latest event, not the real time."""
+    now = datetime.now(brain.tz)
+    if src == "replay":
+        latest = store.events(limit=1, source="replay")
+        if latest:
+            now = datetime.fromisoformat(latest[-1]["time"].replace("Z", "+00:00")).astimezone(brain.tz)
+    return now
+
+
 @app.get("/api/events")
 def get_events(since: str | None = None, limit: int = 500, source: str | None = None):
     return store.events(since=since, limit=limit, source=source)
@@ -179,7 +190,7 @@ def get_summary(source: str | None = None):
 @app.get("/api/baseline")
 def get_baseline(source: str | None = None):
     src = active_source(source)
-    now = datetime.now(brain.tz)
+    now = source_now(src)
     today = now.date()
     stats = {r.key: r for r in routine.learn(store, today, brain.tz, source=src)}
     actual = {"first_out": routine.first_out_today(store, today, brain.tz, src),
@@ -248,3 +259,10 @@ async def ws(socket: WebSocket):
         pass
     finally:
         hub.unsubscribe(q)
+
+
+# The dashboard (dashboard/dist, built with `make dashboard`) is served at / so one URL has everything.
+# Mounted last: every /api, /webhooks and /ws route above takes precedence.
+DASHBOARD = ROOT / "dashboard" / "dist"
+if DASHBOARD.is_dir():
+    app.mount("/", StaticFiles(directory=DASHBOARD, html=True), name="dashboard")

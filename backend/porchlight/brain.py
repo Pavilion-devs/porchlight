@@ -263,13 +263,13 @@ class Brain:
         obs = [e for e in events if e["type"] == "observation"]
         alerts = sum(e["type"] == "alert_sent" for e in events)
         urgent = any(e["severity"] == "urgent" for e in events if e["type"] != "alert_sent")
-        deliveries = sum(e["title"] in ("Package delivered", "Package at the door") for e in obs)
+        deliveries = sum(e["title"] == "Package delivered" for e in obs)
         visitors = sum(e["title"].startswith("Visitor") for e in obs)
         mood = "concern" if urgent else "watch" if alerts else "calm"
         headline = {"calm": "Normal day, all fine.", "watch": "Mostly normal, a couple of things worth knowing.",
                     "concern": "Worth a phone call today."}[mood]
-        return {"date": None, "headline": headline, "body": f"{visitors} visitors, {deliveries} deliveries, "
-                f"{alerts} alerts.", "visitors": visitors, "deliveries": deliveries, "alerts": alerts, "mood": mood}
+        return {"date": None, "headline": headline, "body": f"{self._n(visitors, 'visitor')}, {self._n(deliveries, 'delivery', 'deliveries')}, "
+                f"{self._n(alerts, 'alert')}.", "visitors": visitors, "deliveries": deliveries, "alerts": alerts, "mood": mood}
 
     # --- helpers ----------------------------------------------------------------------------------
     def frame_path(self, name: str | None) -> Path | None:
@@ -294,6 +294,10 @@ class Brain:
         }.get(obs.activity, f"{name} at the door" if resident else
               "Package at the door" if obs.package else
               "Activity at the door" if obs.person or obs.vehicle else "Porch is clear")
+
+    @staticmethod
+    def _n(n: int, one: str, many: str | None = None) -> str:
+        return f"{n} {one if n == 1 else many or one + 's'}"
 
     @staticmethod
     def _duration(d: timedelta) -> str:

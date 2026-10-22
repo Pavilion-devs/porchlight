@@ -4,6 +4,8 @@
 
 Built for the *Build, Ship, Shape: Amazon Developer Hackathon* (Ring track + AWS Builder).
 
+**Try it:** https://100-57-176-133.sslip.io. Press a scenario under *Replay a day* to watch a whole day in about a minute.
+
 ## What it does
 
 Porchlight learns the parent's normal days from the front door, then speaks up when something is off:
@@ -40,13 +42,13 @@ It runs on the **Ring Developer sandbox** doorbell. A sandbox has no real histor
 
 ## Run it
 
-You need **Python 3.11+**, **make** and **curl**. For the live doorbell you also need a Ring developer account and AWS access to Bedrock. To try it offline, skip to step 3.
+You need **Python 3.11+**, **Node 18+**, **make** and **curl**. For the live doorbell you also need a Ring developer account and AWS access to Bedrock. To try it offline, skip to step 3.
 
 **1. Install**
 
 ```bash
 git clone https://github.com/Pavilion-devs/porchlight.git && cd porchlight
-make setup                 # creates .venv, installs everything, creates .env
+make setup                 # creates .venv, installs everything, builds the dashboard, creates .env
 ```
 
 **2. Fill in `.env`** (only needed for the live doorbell)
@@ -67,21 +69,21 @@ make check                 # tests Ring, Bedrock and Telegram, and says how to f
 **3. Start it**
 
 ```bash
-make run                   # live: Ring stream + Bedrock, on http://localhost:8000
+make run                   # live: Ring stream + Bedrock. Open http://localhost:8000 for the dashboard
 make run-offline           # or: no Ring, no AWS (replayed days with template messages)
 ```
 
 **4. Make something happen**
 
 - **Live:** in the Ring Playground, click **Package**, **Vehicle** or **Motion** to choose what the sandbox doorbell sees. Porchlight picks it up within seconds. Set `PACKAGE_ALERT_MINUTES=2` in `.env` to see a package alert quickly.
-- **Replay:** in a second terminal, play a scripted day:
+- **Replay:** on the dashboard, press a scenario under **Replay a day**. Or, from a second terminal:
 
 ```bash
 make demo                            # a full day, in about a minute
 make demo SCENARIO=routine_missed    # or: package, repeat_visitor, night_activity
 ```
 
-Watch the events in the server log, at http://localhost:8000/api/events, or on the dashboard.
+Watch it unfold on the dashboard: the agent's steps, the family's text message, the routine, and the evening summary.
 
 **Tests**
 
@@ -96,11 +98,27 @@ Run `make` on its own to see every command.
 | Folder | What it is |
 |---|---|
 | [`backend/`](backend/) | The Python service: stream watcher, vision, brain, care agent, alerts, replayer and API. See its [README](backend/README.md) for how each part works |
-| [`dashboard/`](dashboard/) | The family dashboard (in progress) |
+| [`dashboard/`](dashboard/) | The family dashboard (React + Vite), served by the backend at `/`. See its [README](dashboard/README.md) |
+| [`deploy/`](deploy/) | Deploying to AWS (EC2): `make deploy`, `make push-token` |
 | [`shared/`](shared/) | The contract between backend and dashboard: [API + messages](shared/CONTRACT.md), [TypeScript types](shared/types.ts) and [mock data](shared/mock/) |
 | [`scripts/`](scripts/) | `doctor.py` (`make check`) and `telegram_setup.py` (`make telegram`) |
 | [`spikes/`](spikes/) | The first standalone experiments that proved the Ring stream and Bedrock vision work |
 | [`docs/`](docs/) | [Build plan](docs/plan.md), [evaluation brief](docs/onboarding-eval.md) and [friction log](docs/FRICTION_LOG.md) (what was hard about the Ring and AWS developer tools) |
+
+## Running on AWS
+
+The hosted version runs on **one EC2 instance** (t3.small, us-east-1):
+
+- Bedrock access comes from the instance's **IAM role** (`porchlight-ec2`, allowed to invoke Anthropic models only), so the server holds no AWS keys.
+- **Caddy** provides HTTPS on a free `sslip.io` name, so Ring can send webhooks to it.
+- **systemd** keeps the backend running.
+
+```bash
+make deploy                # build the dashboard, copy code + .env, install, restart (~1 min)
+make push-token            # send a fresh Ring Playground token to the server (they last 30 min)
+```
+
+The scripts default to our server. To use your own, set `DEPLOY_HOST`, `DEPLOY_KEY` (SSH key) and `DEPLOY_SG` (security group).
 
 ## Troubleshooting
 

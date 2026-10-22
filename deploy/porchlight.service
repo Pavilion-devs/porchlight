@@ -1,0 +1,15 @@
+[Unit]
+Description=Porchlight backend (Ring stream watcher, Bedrock vision + agent, API, dashboard)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/opt/porchlight/backend
+ExecStart=/opt/porchlight/.venv/bin/uvicorn porchlight.app:app --host 127.0.0.1 --port 8000 --proxy-headers
+Restart=always
+RestartSec=3
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
