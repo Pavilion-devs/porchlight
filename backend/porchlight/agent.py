@@ -14,7 +14,7 @@ from strands import Agent, tool
 from strands.models import BedrockModel
 
 from . import routine
-from .brain import Decision, Situation, hhmm, iso
+from .brain import Decision, Situation, day_hhmm, hhmm, iso, long_date
 from .config import Settings
 
 SYSTEM = """You are Porchlight's care agent. You help a family look after {parent}, an older adult who lives
@@ -102,7 +102,7 @@ class CareAgent:
             """Earlier visits this week by someone matching a comma-separated trait signature."""
             self._think("Checking visitor history", f"Has someone like \"{signature}\" been here before?")
             visits = routine.visitor_history(brain.store, signature, self._ctx.time, tz, source=self._ctx.source)
-            return ("Earlier visits: " + ", ".join(v.astimezone(tz).strftime("%a %-I:%M%p") for v in visits)
+            return ("Earlier visits: " + ", ".join(day_hhmm(v.astimezone(tz)) for v in visits)
                     if visits else "No earlier visits by anyone matching that description this week.")
 
         @tool
@@ -121,7 +121,7 @@ class CareAgent:
         agent = Agent(model=self.model, system_prompt=self._system(), tools=self._tools(), callback_handler=None)
         prompt = (f"Situation detected: {sit.kind} (default severity {sit.severity}).\n"
                   f"Time: {hhmm(sit.time.astimezone(self.brain.tz))} on "
-                  f"{sit.time.astimezone(self.brain.tz):%A %b %-d}.\nFacts: {sit.facts}\n"
+                  f"{long_date(sit.time.astimezone(self.brain.tz))}.\nFacts: {sit.facts}\n"
                   "Investigate with your tools, then decide.")
         try:
             result = await asyncio.wait_for(agent.invoke_async(prompt, structured_output_model=AlertDecision),
@@ -135,7 +135,7 @@ class CareAgent:
         agent = Agent(model=self.model, system_prompt=self._system(), callback_handler=None)
         lines = [f"{hhmm(datetime.fromisoformat(e['time'].replace('Z', '+00:00')).astimezone(self.brain.tz))} "
                  f"[{e['type']}/{e['severity']}] {e['title']}: {e['summary']}" for e in events]
-        prompt = (f"Write the evening summary for {local_now:%A %b %-d} from today's events. Count visitors "
+        prompt = (f"Write the evening summary for {long_date(local_now)} from today's events. Count visitors "
                   f"(non-residents who came to the door), deliveries and alerts sent.\n\n"
                   + ("\n".join(lines) or "No events today."))
         result = await asyncio.wait_for(agent.invoke_async(prompt, structured_output_model=DaySummary),

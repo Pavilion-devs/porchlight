@@ -28,7 +28,18 @@ def iso(t: datetime) -> str:
 
 
 def hhmm(t: datetime | time | None) -> str:
-    return t.strftime("%-I:%M%p").lower() if t else "never"
+    """7:05am. Built by hand because strftime's "%-I" doesn't exist on Windows."""
+    return f"{t.hour % 12 or 12}:{t.minute:02d}{'am' if t.hour < 12 else 'pm'}" if t else "never"
+
+
+def day_hhmm(t: datetime) -> str:
+    """Tue 3:40pm"""
+    return f"{t:%a} {hhmm(t)}"
+
+
+def long_date(t: datetime) -> str:
+    """Friday Oct 23"""
+    return f"{t:%A %b} {t.day}"
 
 
 @dataclass
@@ -129,7 +140,7 @@ class Brain:
             earlier = routine.visitor_history(self.store, obs.visitor_signature, obs.time, self.tz,
                                               source=obs.source)
             if len(earlier) >= 2:
-                days = ", ".join(e.astimezone(self.tz).strftime("%a %-I:%M%p").lower() for e in earlier)
+                days = ", ".join(day_hhmm(e.astimezone(self.tz)) for e in earlier)
                 await self._escalate(Situation(
                     "repeat_visitor", "notice", f"Same visitor, {self._ordinal(len(earlier) + 1)} time this week",
                     f"A visitor ({obs.person_desc or obs.visitor_signature}) came to the door at {hhmm(local)}. "
