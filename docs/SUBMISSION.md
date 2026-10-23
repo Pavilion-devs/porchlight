@@ -74,7 +74,7 @@ An agent is most useful when deterministic rules decide *when* to think and the 
 - **Evaluation on AWS:** the agent evaluation ran on the same instance through the same role (`eval/agent_eval.py`).
 
 ## Open Source
-- **Contribution URL:** **TODO** PR link to `AmazonAppDev/ring-api-helloworld`
+- **Contribution URL:** https://github.com/AmazonAppDev/ring-api-helloworld/pull/48
 - **Our repo:** https://github.com/Pavilion-devs/porchlight
 - **GitHub username:** Pavilion-devs
 - **What we did:** we added `scripts/describe_frame.py` to Amazon's official Ring API sample. It sends a frame from a Ring camera to Claude on Amazon Bedrock and gets back structured JSON (person, package, vehicle, activity, concern) using a forced tool call. The README now has a short "Add AI" section.
