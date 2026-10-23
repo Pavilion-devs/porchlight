@@ -27,7 +27,8 @@ Without make: `cd backend && ../.venv/bin/uvicorn porchlight.app:app --port 8000
 | `routine.py` | Learns the routine from 14 days of door activity; matches repeat visitors by trait signature |
 | `webhooks.py` | Ring v1.1 webhook payloads + HMAC-SHA256 verification (raw body, `sha256=` hex) |
 | `replayer.py` | Seeds 14 days of history and plays scripted days on a compressed clock, sending **signed Ring-format webhooks through the same handler** as real ones |
-| `app.py` | FastAPI: REST + WebSocket per [`shared/CONTRACT.md`](../shared/CONTRACT.md) |
+| `mcp_server.py` | **Ask Porchlight**: MCP server (Streamable HTTP at `/mcp`) with read-only tools such as `how_is_parent_doing` and `visitors_this_week` |
+| `app.py` | FastAPI: REST + WebSocket per [`shared/CONTRACT.md`](../shared/CONTRACT.md), plus `/mcp` and the dashboard at `/` |
 
 ## Settings (`.env`)
 

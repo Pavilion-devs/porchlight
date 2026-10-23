@@ -14,7 +14,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from . import routine, webhooks
+from starlette.routing import Route
+
+from . import mcp_server, routine, webhooks
 from .agent import CareAgent
 from .alerts import Notifier
 from .brain import Brain, hhmm, iso
@@ -113,9 +115,10 @@ async def lifespan(_: FastAPI):
     if settings.watcher_enabled:
         watcher = StreamWatcher(ring, on_frame, on_status, every_s=settings.sample_every_s)
         tasks.append(asyncio.create_task(watcher.run()))
-    log.info("Porchlight up: watcher=%s agent=%s alerts=%s", settings.watcher_enabled,
-             bool(brain.agent), notifier.channel)
-    yield
+    log.info("Porchlight up: watcher=%s agent=%s alerts=%s mcp=/mcp%s", settings.watcher_enabled,
+             bool(brain.agent), notifier.channel, " (token)" if settings.mcp_token else "")
+    async with ask_porchlight.session_manager.run():
+        yield
     for t in tasks:
         t.cancel()
     for t in tasks:
@@ -174,7 +177,7 @@ def get_frame(name: str):
 @app.get("/api/summary/today")
 def get_summary(source: str | None = None):
     src = active_source(source)
-    now = datetime.now(brain.tz)
+    now = source_now(src)
     saved = store.get(f"summary:{src}:{now.date()}")
     if saved:
         return saved
@@ -260,6 +263,13 @@ async def ws(socket: WebSocket):
     finally:
         hub.unsubscribe(q)
 
+
+# Ask Porchlight: MCP over Streamable HTTP at /mcp (see mcp_server.py).
+ask_porchlight = mcp_server.build(brain, settings, live, status, active_source, source_now, get_summary, get_baseline)
+_mcp_route = ask_porchlight.streamable_http_app(streamable_http_path="/mcp", stateless_http=True,
+                                                json_response=True, host="0.0.0.0").routes[0]
+app.router.routes.insert(0, Route("/mcp", endpoint=mcp_server.BearerGate(_mcp_route.endpoint, settings.mcp_token),
+                                  methods=["GET", "POST", "DELETE"]))
 
 # The dashboard (dashboard/dist, built with `make dashboard`) is served at / so one URL has everything.
 # Mounted last: every /api, /webhooks and /ws route above takes precedence.

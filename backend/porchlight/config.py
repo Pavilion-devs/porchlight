@@ -47,6 +47,9 @@ class Settings:
     night_end_hour: int = int(os.getenv("NIGHT_END_HOUR", "5"))
     summary_hour: int = int(os.getenv("SUMMARY_HOUR", "20"))
 
+    # Ask Porchlight MCP server (/mcp): optional shared secret, sent as "Authorization: Bearer <token>"
+    mcp_token: str = os.getenv("MCP_TOKEN", "")
+
     # Storage
     data_dir: Path = Path(os.getenv("DATA_DIR", str(ROOT / "backend" / "data")))
 

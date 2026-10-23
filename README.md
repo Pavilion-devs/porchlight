@@ -4,7 +4,7 @@
 
 Built for the *Build, Ship, Shape: Amazon Developer Hackathon* (Ring track + AWS Builder).
 
-**Try it:** https://100-57-176-133.sslip.io. Press a scenario under *Replay a day* to watch a whole day in about a minute.
+**Try it:** https://100-57-176-133.sslip.io. Press a scenario under *Replay a day* to watch a whole day in about a minute. Then ask about it from any MCP client: [Ask Porchlight](#ask-porchlight-mcp).
 
 ## What it does
 
@@ -104,6 +104,29 @@ Run `make` on its own to see every command.
 | [`scripts/`](scripts/) | `doctor.py` (`make check`) and `telegram_setup.py` (`make telegram`) |
 | [`spikes/`](spikes/) | The first standalone experiments that proved the Ring stream and Bedrock vision work |
 | [`docs/`](docs/) | [Build plan](docs/plan.md), [evaluation brief](docs/onboarding-eval.md) and [friction log](docs/FRICTION_LOG.md) (what was hard about the Ring and AWS developer tools) |
+
+## Ask Porchlight (MCP)
+
+Families don't want another dashboard to check. So Porchlight is also an **MCP server**: Streamable HTTP at `/mcp`, built with the official MCP Python SDK, MCP spec 2025-11-25 and newer. That's the standard Alexa+ integrations are built on. Any MCP-capable assistant can answer *"How's Mom doing today?"* from what the doorbell saw.
+
+| Tool | Answers |
+|---|---|
+| `how_is_parent_doing` | "How's Mom today?": the day's summary, anything still open, when she was last seen, routine changes |
+| `open_concerns` | "Anything I should worry about?": what was flagged, what the family was told, what's resolved |
+| `visitors_this_week` | "Has that clipboard guy been back?": visitors grouped by appearance, with every visit |
+| `usual_routine` | Her learned routine vs today |
+| `recent_activity` | The last N hours at the door |
+| `front_door_now` | What the Ring doorbell sees right now |
+
+All tools are read-only. Answers are short sentences that read and sound natural, and they always say when they come from the replayed day.
+
+```bash
+# Claude Code
+claude mcp add --transport http porchlight https://100-57-176-133.sslip.io/mcp
+# Claude app: Settings → Connectors → Add custom connector → https://100-57-176-133.sslip.io/mcp
+```
+
+Set `MCP_TOKEN` in `.env` to require `Authorization: Bearer <token>`.
 
 ## Running on AWS
 
