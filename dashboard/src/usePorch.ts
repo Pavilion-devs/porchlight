@@ -27,8 +27,10 @@ export function usePorch(): Porch {
   const [events, setEvents] = useState<PorchEvent[]>([]);
   const [summary, setSummary] = useState<DailySummary | null>(null);
   const [baseline, setBaseline] = useState<Baseline | null>(null);
-  const [source, setSourceState] = useState<Source>("ring_live");
-  const pinned = useRef(false); // the user picked a source themselves
+  // ?view=replay or ?view=live in the URL picks the source (handy for links and screenshots).
+  const linked = new URLSearchParams(location.search).get("view");
+  const [source, setSourceState] = useState<Source>(linked === "replay" ? "replay" : "ring_live");
+  const pinned = useRef(linked === "replay" || linked === "live"); // the user picked a source themselves
   const sourceRef = useRef(source);
   sourceRef.current = source;
 
@@ -78,6 +80,13 @@ export function usePorch(): Porch {
       }
     };
 
+    // History comes over plain HTTP right away (and every 10 s while the WebSocket is down),
+    // so the dashboard still works behind proxies that block WebSockets.
+    load().catch(() => undefined);
+    const poll = window.setInterval(() => {
+      if (socket?.readyState !== WebSocket.OPEN) load().catch(() => undefined);
+    }, 10_000);
+
     const connect = () => {
       socket = new WebSocket(wsUrl());
       socket.onopen = () => {
@@ -104,6 +113,7 @@ export function usePorch(): Porch {
     return () => {
       closed = true;
       window.clearTimeout(retry);
+      window.clearInterval(poll);
       socket?.close();
     };
   }, [onStatus, refresh]);
