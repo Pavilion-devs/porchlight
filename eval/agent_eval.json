@@ -1,0 +1,452 @@
+[
+  {
+    "case": "package",
+    "seconds": 10.5,
+    "flagged": [
+      "package_unattended"
+    ],
+    "messaged": [
+      "package_unattended"
+    ],
+    "severity": {
+      "package_unattended": "notice"
+    },
+    "fallback": false,
+    "messages": [
+      "\ud83d\udcf1 eval \u2192 Ade: \"Hey Ade \u2014 Mom got a delivery at 10:06am but it's still on the step. She hasn't been to the door since 7:48am, and she usually takes her afternoon walk around 1pm (does it most days). Might be worth giving her a quick call to say hi. \ud83d\udce6\""
+    ],
+    "run": 1
+  },
+  {
+    "case": "package",
+    "seconds": 10.1,
+    "flagged": [
+      "package_unattended"
+    ],
+    "messaged": [
+      "package_unattended"
+    ],
+    "severity": {
+      "package_unattended": "notice"
+    },
+    "fallback": false,
+    "messages": [
+      "\ud83d\udcf1 eval \u2192 Ade: \"Hey Ade \u2014 a package has been on Mom's step since 10:06am and she hasn't been to the door since 7:48am. Her afternoon walk usually happens around now (1:04\u20131:21pm), so she may just be about to head out. Worth a quick call if you don't see her pick it up in the next 20 min or so. \ud83d\udc9b\""
+    ],
+    "run": 2
+  },
+  {
+    "case": "package",
+    "seconds": 9.0,
+    "flagged": [
+      "package_unattended"
+    ],
+    "messaged": [
+      "package_unattended"
+    ],
+    "severity": {
+      "package_unattended": "notice"
+    },
+    "fallback": false,
+    "messages": [
+      "\ud83d\udcf1 eval \u2192 Ade: \"Hey Ade \u2014 Mom hasn't been to the door since 7:48am this morning, and a package has been sitting on her step since 10:06am. She usually takes her afternoon walk around now. Might be worth giving her a quick call to check in. \ud83d\udc99\""
+    ],
+    "run": 3
+  },
+  {
+    "case": "repeat_visitor",
+    "seconds": 18.9,
+    "flagged": [
+      "repeat_visitor",
+      "routine_missed"
+    ],
+    "messaged": [
+      "repeat_visitor",
+      "routine_missed"
+    ],
+    "severity": {
+      "repeat_visitor": "notice",
+      "routine_missed": "urgent"
+    },
+    "fallback": false,
+    "messages": [
+      "\ud83d\udcf1 eval \u2192 Ade: \"Hey Ade \u2014 heads up. A man in a grey hoodie with a clipboard (no uniform or logo) has now shown up at Mom's door 3 days in a row: Sun 3:40pm, Mon 11:05am, and today at 2:12pm. No delivery each time. Worth giving Mom a quick call to check in and ask if she knows who he is. \ud83d\udc99\"",
+      "\ud83d\udcf1 eval \u2192 Ade: \"Hey Ade \u2014 Mom hasn't come to the door at all today. She's normally out by 8:09am at the latest, and again around 1pm \u2014 nothing today and it's now 2:12pm. Could you give her a call to check in? \ud83d\udc99\""
+    ],
+    "run": 1
+  },
+  {
+    "case": "repeat_visitor",
+    "seconds": 15.4,
+    "flagged": [
+      "repeat_visitor",
+      "routine_missed"
+    ],
+    "messaged": [
+      "repeat_visitor"
+    ],
+    "severity": {
+      "repeat_visitor": "urgent"
+    },
+    "fallback": false,
+    "messages": [
+      "\ud83d\udcf1 eval \u2192 Ade: \"Hey Ade \u2014 a man in a grey hoodie with a clipboard (no uniform/logo) has shown up at Mom's door 3 days in a row now: Sun 3:40pm, Mon 11:05am, and again today at 2:12pm. No delivery each time. Mom also hasn't been outside today, which isn't like her. Worth giving her a call to check in and remind her not to open the door to anyone she doesn't know. \ud83d\udc99\""
+    ],
+    "run": 2
+  },
+  {
+    "case": "repeat_visitor",
+    "seconds": 26.5,
+    "flagged": [
+      "repeat_visitor",
+      "routine_missed"
+    ],
+    "messaged": [
+      "repeat_visitor"
+    ],
+    "severity": {
+      "repeat_visitor": "urgent"
+    },
+    "fallback": false,
+    "messages": [
+      "\ud83d\udcf1 eval \u2192 Ade: \"Hey Ade \u2014 heads up. The same man (grey hoodie, clipboard, no uniform or logo) has shown up at Mom's door 3 days in a row: Sun 3:40pm, Mon 11:05am, today 2:12pm. No delivery each time. Mom also hasn't been seen outside today at all, which is unusual. Worth giving her a quick call to check in. \ud83d\udc99\""
+    ],
+    "run": 3
+  },
+  {
+    "case": "routine_missed",
+    "seconds": 36.3,
+    "flagged": [
+      "night_activity",
+      "routine_missed"
+    ],
+    "messaged": [
+      "night_activity",
+      "routine_missed"
+    ],
+    "severity": {
+      "night_activity": "urgent",
+      "routine_missed": "urgent"
+    },
+    "fallback": false,
+    "messages": [
+      "\ud83d\udcf1 eval \u2192 Ade: \"Hey Ade \u2014 heads up. Mom was seen on the porch at 3:12am in her robe, looking around. That's not normal for her \u2014 she's never been up at this hour in the past two weeks. Worth giving her a quick call to make sure she's okay. \ud83d\udc99\"",
+      "\ud83d\udcf1 eval \u2192 Ade: \"Hey Ade \u2014 following up on the 3:12am alert. It's now 9am and Mom still hasn't come to the door \u2014 she's never been this late in 2 weeks (latest was 8:09am). Between the middle-of-the-night porch visit and missing her whole morning, please give her a call now. \ud83d\udc99\""
+    ],
+    "run": 1
+  },
+  {
+    "case": "routine_missed",
+    "seconds": 24.2,
+    "flagged": [
+      "night_activity",
+      "routine_missed"
+    ],
+    "messaged": [
+      "night_activity",
+      "routine_missed"
+    ],
+    "severity": {
+      "night_activity": "urgent",
+      "routine_missed": "urgent"
+    },
+    "fallback": false,
+    "messages": [
+      "\ud83d\udcf1 eval \u2192 Ade: \"Hey Ade \u2014 just a heads-up: Mom stepped out onto the porch in her robe at 3:12am and was looking around. That's really unusual for her. Worth giving her a quick call to make sure she's okay. \ud83d\udc99\"",
+      "\ud83d\udcf1 eval \u2192 Ade: \"Hey Ade \u2014 following up on the 3am alert: Mom still hasn't been to the door and it's 9am (she's always out by 8:09am). The two things together are worth a quick call to her now, just to hear her voice. \ud83d\udc99\""
+    ],
+    "run": 2
+  },
+  {
+    "case": "routine_missed",
+    "seconds": 32.1,
+    "flagged": [
+      "night_activity",
+      "routine_missed"
+    ],
+    "messaged": [
+      "night_activity",
+      "routine_missed"
+    ],
+    "severity": {
+      "night_activity": "urgent",
+      "routine_missed": "urgent"
+    },
+    "fallback": false,
+    "messages": [
+      "\ud83d\udcf1 eval \u2192 Ade: \"Hey Ade \u2014 just a heads-up: Mom stepped out onto the porch in her robe at 3:12am and was looking around. That's not her usual pattern at all. Could you give her a quick call to make sure she's okay? \ud83d\udc99\"",
+      "\ud83d\udcf1 eval \u2192 Ade: \"Hey Ade \u2014 update on Mom: she still hasn't come to the door this morning (usually out by 8:09am at the latest, it's now 9am). Combined with the 3:12am robe incident, I'd suggest calling her now, and if no answer, asking a neighbor to check in. \ud83d\udc99\""
+    ],
+    "run": 3
+  },
+  {
+    "case": "night_activity",
+    "seconds": 14.4,
+    "flagged": [
+      "night_activity"
+    ],
+    "messaged": [
+      "night_activity"
+    ],
+    "severity": {
+      "night_activity": "urgent"
+    },
+    "fallback": false,
+    "messages": [
+      "\ud83d\udcf1 eval \u2192 Ade: \"Hey Ade \u2014 heads up. Mom was seen on the porch at 3:12am in her robe, looking around. That's not normal for her. She's usually not at the door until ~7:50am. Worth giving her a quick call to make sure she's okay. \ud83d\udc99\""
+    ],
+    "run": 1
+  },
+  {
+    "case": "night_activity",
+    "seconds": 19.8,
+    "flagged": [
+      "night_activity"
+    ],
+    "messaged": [
+      "night_activity"
+    ],
+    "severity": {
+      "night_activity": "urgent"
+    },
+    "fallback": false,
+    "messages": [
+      "\ud83d\udcf1 eval \u2192 Ade: \"Hey Ade \u2014 heads up. At 3:12am the doorbell caught Mom stepping onto the porch in her robe, looking around. That's not normal for her \u2014 she's never been at the door this late in the past two weeks. Could you give her a quick call to make sure she's okay? \ud83d\udc99\""
+    ],
+    "run": 2
+  },
+  {
+    "case": "night_activity",
+    "seconds": 12.1,
+    "flagged": [
+      "night_activity"
+    ],
+    "messaged": [
+      "night_activity"
+    ],
+    "severity": {
+      "night_activity": "urgent"
+    },
+    "fallback": false,
+    "messages": [
+      "\ud83d\udcf1 eval \u2192 Ade: \"Hey Ade \u2014 Mom was just seen on her front porch at 3:12am in her robe, looking around. This has never happened in her normal routine. She may be fine, but it's worth calling her now to check in. \ud83d\udc99\""
+    ],
+    "run": 3
+  },
+  {
+    "case": "full_day",
+    "seconds": 36.9,
+    "flagged": [
+      "package_unattended",
+      "repeat_visitor"
+    ],
+    "messaged": [
+      "package_unattended",
+      "repeat_visitor"
+    ],
+    "severity": {
+      "package_unattended": "notice",
+      "repeat_visitor": "urgent"
+    },
+    "fallback": false,
+    "messages": [
+      "\ud83d\udcf1 eval \u2192 Ade: \"Hey Ade \u2014 a package has been on Mom's front step since 10:06am and she hasn't been out since 7:48am, so she probably doesn't know it's there. She usually takes her afternoon walk around 1pm, so she may grab it soon. Worth a quick call to give her a heads-up! \ud83d\udce6\"",
+      "\ud83d\udcf1 eval \u2192 Ade: \"Hey Ade \u2014 a man in a grey hoodie with a clipboard (no uniform or logo) has now shown up at Mom's door 3 days in a row: Sun 3:40pm, Mon 11:05am, and just now at 2:12pm. No delivery each time. Mom is home. Worth calling her now to check in, and maybe suggest she not open the door to him. \ud83d\ude4f\""
+    ],
+    "run": 1
+  },
+  {
+    "case": "full_day",
+    "seconds": 36.3,
+    "flagged": [
+      "package_unattended",
+      "repeat_visitor"
+    ],
+    "messaged": [
+      "package_unattended",
+      "repeat_visitor"
+    ],
+    "severity": {
+      "package_unattended": "notice",
+      "repeat_visitor": "urgent"
+    },
+    "fallback": false,
+    "messages": [
+      "\ud83d\udcf1 eval \u2192 Ade: \"Hey Ade \u2014 Mom's had a package on her step since 10:06am and hasn't been to the door since 7:48am (5+ hrs). She usually takes her afternoon walk around now, so she may be fine \u2014 but it might be worth giving her a quick call to say hi. \ud83d\udc9b\"",
+      "\ud83d\udcf1 eval \u2192 Ade: \"Hey Ade \u2014 a man in a grey hoodie with a clipboard (no uniform/logo) has shown up 3 days in a row: Sun 3:40pm, Mon 11:05am, today 2:12pm. No delivery, no ID. Mom hasn't come to the door today. Worth calling her now to check in + remind her not to open the door to strangers. \ud83d\udc9b\""
+    ],
+    "run": 2
+  },
+  {
+    "case": "full_day",
+    "seconds": 37.2,
+    "flagged": [
+      "package_unattended",
+      "repeat_visitor"
+    ],
+    "messaged": [
+      "package_unattended",
+      "repeat_visitor"
+    ],
+    "severity": {
+      "package_unattended": "notice",
+      "repeat_visitor": "urgent"
+    },
+    "fallback": false,
+    "messages": [
+      "\ud83d\udcf1 eval \u2192 Ade: \"Hey Ade \u2014 Mom got her paper at 7:48am but hasn't been to the door since. A package arrived at 10:06am and is still sitting outside. Her usual afternoon walk is around 1pm (latest we've seen is 1:21pm). Worth a quick call to check in. \ud83d\udc9b\"",
+      "\ud83d\udcf1 eval \u2192 Ade: \"Hey Ade \u2014 heads up. The same man (grey hoodie, clipboard, no uniform or logo) has shown up at Mom's door 3 days in a row: Sun 3:40pm, Mon 11:05am, today 2:12pm. No delivery, no ID. Worth calling Mom now to make sure she's okay and hasn't let him in. \ud83d\udc9b\""
+    ],
+    "run": 3
+  },
+  {
+    "case": "normal_quick_pickup",
+    "seconds": 0.0,
+    "flagged": [],
+    "messaged": [],
+    "severity": {},
+    "fallback": false,
+    "messages": [],
+    "run": 1
+  },
+  {
+    "case": "normal_quick_pickup",
+    "seconds": 0.0,
+    "flagged": [],
+    "messaged": [],
+    "severity": {},
+    "fallback": false,
+    "messages": [],
+    "run": 2
+  },
+  {
+    "case": "normal_quick_pickup",
+    "seconds": 0.0,
+    "flagged": [],
+    "messaged": [],
+    "severity": {},
+    "fallback": false,
+    "messages": [],
+    "run": 3
+  },
+  {
+    "case": "normal_a_bit_late",
+    "seconds": 0.0,
+    "flagged": [],
+    "messaged": [],
+    "severity": {},
+    "fallback": false,
+    "messages": [],
+    "run": 1
+  },
+  {
+    "case": "normal_a_bit_late",
+    "seconds": 0.0,
+    "flagged": [],
+    "messaged": [],
+    "severity": {},
+    "fallback": false,
+    "messages": [],
+    "run": 2
+  },
+  {
+    "case": "normal_a_bit_late",
+    "seconds": 0.0,
+    "flagged": [],
+    "messaged": [],
+    "severity": {},
+    "fallback": false,
+    "messages": [],
+    "run": 3
+  },
+  {
+    "case": "normal_new_visitor_once",
+    "seconds": 0.0,
+    "flagged": [],
+    "messaged": [],
+    "severity": {},
+    "fallback": false,
+    "messages": [],
+    "run": 1
+  },
+  {
+    "case": "normal_new_visitor_once",
+    "seconds": 0.0,
+    "flagged": [],
+    "messaged": [],
+    "severity": {},
+    "fallback": false,
+    "messages": [],
+    "run": 2
+  },
+  {
+    "case": "normal_new_visitor_once",
+    "seconds": 0.0,
+    "flagged": [],
+    "messaged": [],
+    "severity": {},
+    "fallback": false,
+    "messages": [],
+    "run": 3
+  },
+  {
+    "case": "normal_walk_day",
+    "seconds": 0.0,
+    "flagged": [],
+    "messaged": [],
+    "severity": {},
+    "fallback": false,
+    "messages": [],
+    "run": 1
+  },
+  {
+    "case": "normal_walk_day",
+    "seconds": 0.0,
+    "flagged": [],
+    "messaged": [],
+    "severity": {},
+    "fallback": false,
+    "messages": [],
+    "run": 2
+  },
+  {
+    "case": "normal_walk_day",
+    "seconds": 0.0,
+    "flagged": [],
+    "messaged": [],
+    "severity": {},
+    "fallback": false,
+    "messages": [],
+    "run": 3
+  },
+  {
+    "case": "normal_busy_street",
+    "seconds": 0.0,
+    "flagged": [],
+    "messaged": [],
+    "severity": {},
+    "fallback": false,
+    "messages": [],
+    "run": 1
+  },
+  {
+    "case": "normal_busy_street",
+    "seconds": 0.0,
+    "flagged": [],
+    "messaged": [],
+    "severity": {},
+    "fallback": false,
+    "messages": [],
+    "run": 2
+  },
+  {
+    "case": "normal_busy_street",
+    "seconds": 0.0,
+    "flagged": [],
+    "messaged": [],
+    "severity": {},
+    "fallback": false,
+    "messages": [],
+    "run": 3
+  }
+]

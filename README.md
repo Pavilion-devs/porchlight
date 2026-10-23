@@ -21,6 +21,10 @@ Porchlight learns the parent's normal days from the front door, then speaks up w
 
 Before it sends anything, an AI agent checks the history (recent activity, her usual routine, past visitors, alerts already sent) so the family gets one clear, calm message instead of a stream of motion alerts.
 
+## Does it work?
+
+We ran 30 replayed days through the real agent on Amazon Bedrock. **21 of 21 situations reached the family. 15 normal days sent 0 messages. The agent made the same decision on every run in 9 of 10 cases.** The full method and caveats are in [`eval/AGENT_EVAL.md`](eval/AGENT_EVAL.md).
+
 ## How it works
 
 ```
@@ -103,6 +107,7 @@ Run `make` on its own to see every command.
 | [`shared/`](shared/) | The contract between backend and dashboard: [API + messages](shared/CONTRACT.md), [TypeScript types](shared/types.ts) and [mock data](shared/mock/) |
 | [`scripts/`](scripts/) | `doctor.py` (`make check`) and `telegram_setup.py` (`make telegram`) |
 | [`spikes/`](spikes/) | The first standalone experiments that proved the Ring stream and Bedrock vision work |
+| [`eval/`](eval/) | Testing and the [agent evaluation](eval/AGENT_EVAL.md) |
 | [`docs/`](docs/) | [Build plan](docs/plan.md), [evaluation brief](docs/onboarding-eval.md) and [friction log](docs/FRICTION_LOG.md) (what was hard about the Ring and AWS developer tools) |
 
 ## Ask Porchlight (MCP)
