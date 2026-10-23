@@ -54,6 +54,15 @@ Severity: **High** (blocked us) · **Medium** (cost real time) · **Low** (annoy
 ### 6. (Positive) Playground scene selection works for our own client
 - Clicking Package / Vehicle / Motion in the Playground changes the footage our own WHEP client receives, and it persists after the popup closes. Very useful for demos. Worth documenting.
 
+### 10. Webhooks can't be exercised from the sandbox
+- **Task:** Receive real Ring webhooks (`motion_detected`, `button_press`) at our HTTPS endpoint on AWS.
+- **Steps:** Deployed a public HTTPS webhook handler that verifies HMAC. Read the docs on how webhook delivery is tested.
+- **Expected:** Playground actions (Package / Motion, a button press) fire signed webhooks to the app's configured Webhook URL.
+- **Actual:** Webhook delivery needs a staging user: a real Ring account with a US device and a Ring Protection plan. The Playground drives the live stream, but we found no way to make it send webhooks.
+- **Severity:** Medium (the main event channel in the docs is untestable without hardware)
+- **Workaround:** Our replayer builds v1.1 payloads exactly as documented, signs them with our HMAC key, and sends them through the same handler as real webhooks. The tests verify the signature round trip.
+- **Suggestion:** Let Playground actions emit signed webhooks to the configured Webhook URL, or add a "send test webhook" button in the Developer Console.
+
 ---
 
 ## AWS
@@ -78,3 +87,6 @@ Severity: **High** (blocked us) · **Medium** (cost real time) · **Low** (annoy
 
 ### 9. (Positive) Strands structured output made the agent dependable
 - `invoke_async(..., structured_output_model=PydanticModel)` gave us typed decisions after free-form tool use, with no JSON parsing code. Tools as plain decorated Python functions made the agent easy to test. The first working agent took under an hour.
+
+### 11. (Positive) An IAM role made the server deployment keyless
+- An EC2 instance profile with a narrow inline policy (`bedrock:InvokeModel` / `Converse` on Anthropic models only) meant boto3 and Strands worked on the server with no credentials file. It kept working when the developer's `aws login` session expired mid-day.
